@@ -1,0 +1,40 @@
+name: SpudTicket
+main: fun.spud.zrll.HelloMinecraft
+version: 1.0
+api-version: 1.16
+commands:
+  linkdb:
+    usage: "/linkdb <address> <port> <dbname> <username> <password>"
+    description: "Link the ticket system to a MySql database."
+    permission: "spud.editsql"
+    permission-message: "Only admins can do this!"
+  inittable:
+    usage: "/inittable"
+    description: "Create tables in the database."
+    permission: "spud.editsql"
+    permission-message: "Only admins can do this!"
+  updatedb:
+    usage: "/updatedb"
+    description: "Update the database to fit the new version"
+    permission: "spud.editsql"
+    permission-message: "Only admins can do this!"
+  getcard:
+    usage: "/getcard"
+    description: "Get a new spud++."
+  breaksign:
+    usage: "/breaksign"
+    description: "Make signs breakable for you."
+    permission: "spud.breaksign"
+    permission-message: "Only admins can do this!"
+  donebreaksign:
+    usage: "/donebreaksign"
+    description: "Make signs unbreakable for you again."
+    permission: "spud.breaksign"
+    permission-message: "Only admins can do this!"
+  charge:
+    usage: "/charge <tid> <amount> [player]"
+    description: "Charge the specific spud++.(Using the wallet of the player, need permission: spud.ticketmanage)"
+  checkvalue:
+    usage: "/checkvalue <tid>"
+    description: "Check the money left in your supd++."
+softdepend: [Vault]

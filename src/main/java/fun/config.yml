@@ -1,0 +1,28 @@
+configversion: 1.0
+MySql:
+  ip: 1270.0.0.1
+  port: 3306
+  username: user
+  password: 000000
+  dbname: spudticket
+ticket-price: 2
+lang:
+  notaplayer: "不是玩家，请输入完整的参数"
+  dbinformationchange: "数据库信息已刷新"
+  tableinit: "已初始化所有数据表格"
+  newspud++: "已为您颁发新的spud++, id为 %s"
+  readytobreaksign: "您现在可以破坏告示牌了"
+  donebreaksign: "您现在不能再破坏告示牌了"
+  notinarray: "您不在可以破坏告示牌的列表里"
+  brokeblock: "您破坏了一个方块"
+  noenoughmoney: "您没有足够的余额"
+  gateclosed: "该检票口已关闭"
+  dbupdated: "数据库已经全部更新"
+  passgate: "%s 从 %s，余额：%s"
+  getin: "进站"
+  getout: "出站"
+  chargescucceed: "您已成功为将$%s充值进%s，您目前的余额为：%s"
+  chargeuke: "遇到未知错误，请将以下信息提交给管理员：%s"
+  moneyleft: "余额：%s"
+  inputamount: "请在聊天栏输入充值金额，您目前的余额为：%s"
+  inputfailed: "您的输入不合法，请输入一个数字，充值失败，请重新点击告示牌"
