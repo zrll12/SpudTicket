@@ -3,35 +3,43 @@
 #### 介绍
 一个适用于mc1.16及以上的spigot插件，用于售票，检票。
 
-#### 软件架构
-软件架构说明
-
-
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1. 下载最新版发行版并放入plugins文件夹
+2. 启动服务器
+3. 游戏内运行/linkdb链接MySql数据库
+4. 编辑config.yml配置其他选项并重启
 
 #### 使用说明
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1. 由于数据库用户名和密码加密存储，请在游戏内通过/linkdb来链接数据库
+2. 告示牌左键使用，若需要破坏告示牌，请运行/breaksign，完成请运行/donebreaksign
+3. 数据库表格使用：ticket存储公交卡信息，deals存储消费信息（进站，出站，充值）
+4. 告示牌格式：
+   (1)售票相关：
+      第一行：[ticket]
+      第二行：获取交通卡：Get your spud++!；充值：Charge your spud++!；查询余额：Check money left
+   (2)闸机相关：
+      第一行：[gate]
+      第二行：站号(格式：“线路号:车站号”，例：“1.01”)
+      第三行：方向，结构：告示牌后面放任意方块，方块左边或右边放置栅栏门。左：<-；右：->
+      第四行：操作，进站：in；出站：out
+
+#### 功能
+
+1. 自动颁发交通卡
+2. 出站自动扣费，进站最低余额10
+3. 充值使用vault扣费
+
+#### 待添加功能
+
+1. 分段计价
+2. 退卡
+3. 单程票
+4. 自动移除一定时间内为交易且余额为0的卡
 
 #### 参与贡献
 
 1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+2.  提交代码
+3.  新建 Pull Request
