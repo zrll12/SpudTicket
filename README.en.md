@@ -1,36 +1,46 @@
 # SpudTicket
 
 #### Description
-一个适用于mc1.16及以上的spigot插件，用于售票，检票。
-
-#### Software Architecture
-Software architecture description
+A Minecraft plugin which is used for tickets.
 
 #### Installation
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1. Download the least release and put it into the "plugins" folder
+2. Run the server
+3. Use /linkdb in game to link MySql
+4. Edit config.yml to change other behaviors of the plugin
 
 #### Instructions
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1. Please use /linkdb only as the username and the password of the database is stored encrypted.
+2. Use the signs by left click, if you need to destroy it, please run /breaksign, and /donebreaksign after finished.
+3. We use "ticket" table to store the information of the card, and "deals" to store the uses of the card (get in, get out, charge).
+4. The usage of the sign:
+   (1)About the vendor machine:
+      First line: [ticket]
+      Second line: Get card: Get your spud++!; charge: Charge your spud++!; check balance：Check money left
+   (2)About the gate:
+      First line: [gate]
+      Second line: Station number ("line serial:station serial", eg: "1.01")
+      Third line: Direction, structure: put a block behind the sign, and place oak fence gate in its left or right. left: <-; right: ->
+      Forth line: Operation, Get in: in; Get out：out
+
+#### Features
+
+1. Give card out automatically
+2. Automatically pay while getting out
+3. Limit the player to get in if the balance is below 10
+3. Use Vault to manage the balance
+
+#### Todo
+
+1. Different cost to different distance 
+2. Refund
+3. Single journey ticket
+4. Automatically remove cards which dose not have any operation of a period of time and have a balance of 0
 
 #### Contribution
 
 1.  Fork the repository
-2.  Create Feat_xxx branch
-3.  Commit your code
-4.  Create Pull Request
-
-
-#### Gitee Feature
-
-1.  You can use Readme\_XXX.md to support different languages, such as Readme\_en.md, Readme\_zh.md
-2.  Gitee blog [blog.gitee.com](https://blog.gitee.com)
-3.  Explore open source project [https://gitee.com/explore](https://gitee.com/explore)
-4.  The most valuable open source project [GVP](https://gitee.com/gvp)
-5.  The manual of Gitee [https://gitee.com/help](https://gitee.com/help)
-6.  The most popular members  [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+2.  Commit your code
+3.  Create Pull Request
