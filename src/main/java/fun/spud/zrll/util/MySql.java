@@ -36,7 +36,7 @@ public class MySql {
      * @throws SQLException MySql returns with en error
      */
     public static Connection getSQLConnection() throws ClassNotFoundException, SQLException {
-        final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+        final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
         final String DB_URL = "jdbc:mysql://" + Ip + ":" + Port + "/" + DBName + "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
 
         Connection connection;
