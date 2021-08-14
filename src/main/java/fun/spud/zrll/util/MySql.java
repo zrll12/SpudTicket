@@ -36,7 +36,7 @@ public class MySql {
      * @throws SQLException MySql returns with en error
      */
     public static Connection getSQLConnection() throws ClassNotFoundException, SQLException {
-        final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
+        final String JDBC_DRIVER = HelloMinecraft.config.getString("MySql.jdbcname", "com.mysql.jdbc.Driver");
         final String DB_URL = "jdbc:mysql://" + Ip + ":" + Port + "/" + DBName + "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
 
         Connection connection;
@@ -58,13 +58,13 @@ public class MySql {
                     connection = getSQLConnection();
                     statement = connection.createStatement();
                     statement.execute("CREATE TABLE IF NOT EXISTS `ticket`  (\n" +
-                            "  `serial` INTEGER UNIQUE AUTO_INCREMENT,\n" +
+                            "  `serial` INTEGER AUTO_INCREMENT,\n" +
                             "  `tid` TEXT NOT NULL,\n" +
                             "  `money` double NOT NULL,\n" +
                             "  PRIMARY KEY (`serial`)\n" +
                             ");");
                     statement.execute("CREATE TABLE IF NOT EXISTS `deals`  (\n" +
-                            "  `serial` INTEGER UNIQUE AUTO_INCREMENT,\n" +
+                            "  `serial` INTEGER AUTO_INCREMENT,\n" +
                             "  `time` BIGINT NOT NULL,\n" +
                             "  `tid` TEXT NOT NULL,\n" +
                             "  `action` BOOLEAN NOT NULL,\n" +//0:in, 1:out
