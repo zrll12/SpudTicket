@@ -28,7 +28,7 @@ public class HelloMinecraft extends JavaPlugin {
         instance = this;
         logger = getLogger();
         config = getConfig();
-        if(config.getDouble("configversion") < 1.0){
+        if(config.getDouble("configversion") < 1.1){
             logger.info("Configure file outdated, please update it as to provide full experiences.");
         }
 
@@ -43,6 +43,7 @@ public class HelloMinecraft extends JavaPlugin {
 
         Bukkit.getPluginManager().registerEvents(new Gate(), this);
         Bukkit.getPluginManager().registerEvents(new TicketVender(), this);
+        Bukkit.getPluginManager().registerEvents(new GateOperation(), this);
 
         Des des = null;
         try {
