@@ -1,9 +1,11 @@
 package fun.spud.zrll;
 
 import fun.spud.zrll.command.breaksign;
+import fun.spud.zrll.events.OpenDoorEvent;
 import fun.spud.zrll.util.BreakBlockList;
 import fun.spud.zrll.util.MySql;
 import fun.spud.zrll.varclass.Equal;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -143,9 +145,19 @@ public class Gate implements Listener {
                             preparedstatement.execute();
                             preparedstatement.close();
                             connection.close();
+
+                            new BukkitRunnable(){
+                                @Override
+                                public void run() {
+                                    OpenDoorEvent event = new OpenDoorEvent();
+                                    event.setDelay(2000);
+                                    event.setLocation(gate);
+                                    Bukkit.getPluginManager().callEvent(event);
+                                }
+                            }.runTask(HelloMinecraft.instance);
+
                             e.getPlayer().sendMessage(String.format(Objects.requireNonNull(HelloMinecraft.config.getString("lang.passgate", ", monet left: %s")),
                                     HelloMinecraft.config.getString("lang.getin", "Getting in"), sign.getLine(1), money));
-                            openGate(gate);
                         } catch (ClassNotFoundException | SQLException classNotFoundException) {
                             classNotFoundException.printStackTrace();
                         }
@@ -187,9 +199,19 @@ public class Gate implements Listener {
                             preparedstatement.execute();
                             preparedstatement.close();
                             connection.close();
+
+                            new BukkitRunnable() {
+                                @Override
+                                public void run() {
+                                    OpenDoorEvent event = new OpenDoorEvent();
+                                    event.setDelay(2000);
+                                    event.setLocation(gate);
+                                    Bukkit.getPluginManager().callEvent(event);
+                                }
+                            }.runTask(HelloMinecraft.instance);
+
                             e.getPlayer().sendMessage(String.format(Objects.requireNonNull(HelloMinecraft.config.getString("lang.passgate", "%s at %s, monet left: %s")),
                                     HelloMinecraft.config.getString("lang.getout", "Getting out"), sign.getLine(1), money));
-                            openGate(gate);
                         } catch (ClassNotFoundException | SQLException classNotFoundException) {
                             classNotFoundException.printStackTrace();
                         }
@@ -203,20 +225,6 @@ public class Gate implements Listener {
         }
     }
 
-    void openGate(Location gateLocation){
-        org.bukkit.block.data.type.Gate blockgate;
-        blockgate = (org.bukkit.block.data.type.Gate) gateLocation.getBlock().getBlockData();
-        blockgate.setOpen(true);
-        gateLocation.getBlock().setBlockData(blockgate);
-
-        Timer timer = new Timer();
-        CloseGate timertask = new CloseGate(timer);
-
-        timertask.setGate(blockgate);
-        timertask.setLocation(gateLocation);
-        timer.schedule(timertask, 3000);
-    }
-
     String getTID(ItemStack itemstack){
         ItemMeta itemmeta = itemstack.getItemMeta();
         if(!Objects.requireNonNull(itemmeta).hasLore()){
@@ -227,33 +235,5 @@ public class Gate implements Listener {
             return null;
         }
         return Objects.requireNonNull(lore).get(0);
-    }
-}
-
-class CloseGate extends TimerTask{
-    Timer timer;
-    org.bukkit.block.data.type.Gate gate;
-    Location location;
-
-    public void setGate(org.bukkit.block.data.type.Gate gate) {
-        this.gate = gate;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public CloseGate(Timer timer){
-        this.timer = timer;
-    }
-
-    @Override
-    public void run() {
-        if(gate == null || location == null){
-            HelloMinecraft.instance.getLogger().info("No gates available.");
-        }
-        gate.setOpen(false);
-        location.getBlock().setBlockData(gate);
-        timer.cancel();
     }
 }
