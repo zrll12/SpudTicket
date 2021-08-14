@@ -1,5 +1,6 @@
-configversion: 1.0
+configversion: 1.1
 MySql:
+  jdbcname: "com.mysql.jdbc.Driver"
   ip: 1270.0.0.1
   port: 3306
   username: user
