@@ -24,6 +24,9 @@ A Minecraft plugin which is used for tickets.
       Second line: Station number ("line serial:station serial", eg: "1.01")
       Third line: Direction, structure: put a block behind the sign, and place oak fence gate in its left or right. left: <-; right: ->
       Forth line: Operation, Get in: in; Get out：out
+5. About build versions (from v1.1):
+   (1)min: Only include .class files
+   (2)complete: include .class files and the md5 algorithm files (use this when min version does not work)
 
 #### Features
 
