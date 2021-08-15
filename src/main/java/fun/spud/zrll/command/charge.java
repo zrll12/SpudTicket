@@ -34,7 +34,14 @@ public class charge implements CommandExecutor {
         if(args.length == 3){
             player = args[2];
         }
-        if(HelloMinecraft.econ.getBalance(Bukkit.getPlayer(player)) <= Double.parseDouble(args[1])){
+        double amount;
+        try{
+            amount = Double.parseDouble(args[1]);
+        } catch (IllegalArgumentException NumberFormatException){
+            commandSender.sendMessage(Objects.requireNonNull(HelloMinecraft.config.getString("lang.inputfailed", "Error input, this is not a number")));
+            return true;
+        }
+        if(HelloMinecraft.econ.getBalance(Bukkit.getPlayer(player)) <= amount){
             System.out.println(HelloMinecraft.econ.getBalance(Bukkit.getPlayer(player)));
             commandSender.sendMessage(Objects.requireNonNull(HelloMinecraft.config.getString("lang.noenoughmoney", "You do not have enough money.")));
             return true;
@@ -59,26 +66,23 @@ public class charge implements CommandExecutor {
                     }
                     double money = resultset.getDouble("money");
                     preparedstatement.close();
-                    money += Double.parseDouble(args[1]);
+                    money += amount;
                     preparedstatement = connection.prepareStatement("UPDATE ticket\n" +
                             "SET money=?\n" +
                             "WHERE tid=?");
                     preparedstatement.setDouble(1, money);
                     preparedstatement.setString(2, args[0]);
                     preparedstatement.execute();
-                    System.out.println("111");
                     preparedstatement = connection.prepareStatement("INSERT INTO deals (time,tid,station,action, money) VALUES (?, ?, 0, 3, ?);");
                     preparedstatement.setLong(1, System.currentTimeMillis());
                     preparedstatement.setString(2, args[0]);
-                    preparedstatement.setDouble(3, Double.parseDouble(args[1]));
+                    preparedstatement.setDouble(3, amount);
                     preparedstatement.execute();
                     preparedstatement.close();
                     connection.close();
                     String message = HelloMinecraft.config.getString("lang.chargescucceed", "You have successfully charged %s into %s. Now yu have %s");
-                    if(message == null){
-                        message = "You have successfully charged %s into %s. Now you have %s";
-                    }
                     if(commandSender instanceof Player){
+                        assert message != null;
                         commandSender.sendMessage(String.format(message, args[1], args[0], money));
                     }
                     HelloMinecraft.instance.getLogger().info(finalPlayer + " has charged " + args[1] + " in to " + args[0] + ". Now you have " + money + ".");
