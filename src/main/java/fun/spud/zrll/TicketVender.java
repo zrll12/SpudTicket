@@ -92,6 +92,7 @@ public class TicketVender  implements Listener {
                             ResultSet resultset = preparedstatement.executeQuery();
                             if(!resultset.next()){
                                 e.getPlayer().sendMessage(String.format(Objects.requireNonNull(HelloMinecraft.config.getString("lang.chargeuke", "Unknown error has occurred when charging, please send the following message to the admins: %s")), "No such ticket"));
+                                return;
                             }
                             double moneyleft = resultset.getDouble("money");
                             e.getPlayer().sendMessage(String.format(Objects.requireNonNull(HelloMinecraft.config.getString("lang.inputamount", "Please input the amount in the chat area, your balance is: %s")), moneyleft));
@@ -129,6 +130,7 @@ public class TicketVender  implements Listener {
                             ResultSet resultset = preparedstatement.executeQuery();
                             if(!resultset.next()){
                                 e.getPlayer().sendMessage(String.format(Objects.requireNonNull(HelloMinecraft.config.getString("lang.chargeuke", "Unknown error has occurred, please send the following message to the admins: %s.")), "No such ticket."));
+                                return;
                             }
                             double money = resultset.getDouble("money");
                             preparedstatement.close();
@@ -156,12 +158,7 @@ public class TicketVender  implements Listener {
             return;
         }
         chargeList.remove(info, equal);
-        try{
-            double amount = Double.parseDouble(e.getMessage());
-            e.getPlayer().chat("/charge " + check.getTid() + " " + amount);
-        } catch (NullPointerException | IllegalArgumentException NumberFormatException) {
-            e.getPlayer().sendMessage(Objects.requireNonNull(HelloMinecraft.config.getString("lang.inputfailed", "Error input, this is not a number")));
-        }
+        e.getPlayer().chat("/charge " + check.getTid() + " " + e.getMessage());
     }
 
     String getTID(ItemStack itemstack){
