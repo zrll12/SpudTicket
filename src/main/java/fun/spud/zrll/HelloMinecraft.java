@@ -28,9 +28,6 @@ public class HelloMinecraft extends JavaPlugin {
         instance = this;
         logger = getLogger();
         config = getConfig();
-        if(config.getDouble("configversion") < 1.1){
-            logger.info("Configure file outdated, please update it as to provide full experiences.");
-        }
 
         Objects.requireNonNull(Bukkit.getPluginCommand("breaksign")).setExecutor(new breaksign());
         Objects.requireNonNull(Bukkit.getPluginCommand("donebreaksign")).setExecutor(new donebreaksign());
@@ -66,6 +63,39 @@ public class HelloMinecraft extends JavaPlugin {
             return;
         }
         getLogger().info("Plugin loaded.");
+    }
+
+    public void saveDefaultConfig(){
+        if(getConfig().getDouble("configversion", 0) <= 1.1){
+            logger.info("Configure file outdated, now updating it to the least version.");
+            getConfig().set("configversion", 1.1);
+            getConfig().set("MySql.ip", getConfig().getString("MySql.ip", "127.0.0.1"));
+            getConfig().set("MySql.port", getConfig().getInt("MySql.port", 3306));
+            getConfig().set("MySql.username", getConfig().getString("MySql.username", "user"));
+            getConfig().set("MySql.password", getConfig().getString("MySql.password", "0000"));
+            getConfig().set("MySql.dbname", getConfig().getString("MySql.dbname", "spudticket"));
+            getConfig().set("ticket-price", 2);
+            getConfig().set("lang.notaplayer", "不是玩家，请输入完整的参数");
+            getConfig().set("lang.dbinformationchange", "数据库信息已刷新");
+            getConfig().set("tableinit", "已初始化所有数据表格");
+            getConfig().set("newspud++", "已为您颁发新的spud++, id为 %s");
+            getConfig().set("readytobreaksign", "您现在可以破坏告示牌了");
+            getConfig().set("donebreaksign", "您现在不能再破坏告示牌了");
+            getConfig().set("notinarray", "您不在可以破坏告示牌的列表里");
+            getConfig().set("brokeblock", "您破坏了一个方块");
+            getConfig().set("noenoughmoney", "您没有足够的余额");
+            getConfig().set("gateclosed", "该检票口已关闭");
+            getConfig().set("dbupdated", "数据库已经全部更新");
+            getConfig().set("passgate", "%s 从 %s，余额：%s");
+            getConfig().set("getin", "进站");
+            getConfig().set("getout", "出站");
+            getConfig().set("chargescucceed", "您已成功为将$%s充值进%s，您目前的余额为：%s");
+            getConfig().set("chargeuke", "遇到未知错误，请将以下信息提交给管理员：%s");
+            getConfig().set("moneyleft", "余额：%s");
+            getConfig().set("inputamount", "请在聊天栏输入充值金额，您目前的余额为：%s");
+            getConfig().set("inputfailed", "您的输入不合法，请输入一个数字，充值失败，请重新点击告示牌");
+            saveConfig();
+        }
     }
 
     private boolean setupEconomy() {
