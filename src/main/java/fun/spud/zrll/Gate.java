@@ -2,7 +2,6 @@ package fun.spud.zrll;
 
 import fun.spud.zrll.command.breaksign;
 import fun.spud.zrll.events.OpenDoorEvent;
-import fun.spud.zrll.util.BreakBlockList;
 import fun.spud.zrll.util.MySql;
 import fun.spud.zrll.varclass.Equal;
 import org.bukkit.Bukkit;
@@ -24,8 +23,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Gate implements Listener {
     Location getDoorPosition(BlockFace facing, Location sign, int direction){
@@ -184,6 +181,11 @@ public class Gate implements Listener {
                             preparedstatement.close();
 
                             money -= HelloMinecraft.config.getDouble("ticket-price", 2);
+
+                            if (money < 0){
+                                e.getPlayer().sendMessage(Objects.requireNonNull(HelloMinecraft.config.getString("lang.noenoughmoney", "You do not have enough money")));
+                            }
+
                             preparedstatement = connection.prepareStatement("UPDATE ticket\n" +
                                     "SET money=?\n" +
                                     "WHERE tid=?");
