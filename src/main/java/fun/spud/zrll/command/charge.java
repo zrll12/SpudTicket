@@ -42,7 +42,7 @@ public class charge implements CommandExecutor {
             return true;
         }
         if(HelloMinecraft.econ.getBalance(Bukkit.getPlayer(player)) <= amount){
-            System.out.println(HelloMinecraft.econ.getBalance(Bukkit.getPlayer(player)));
+            System.out.println(amount);
             commandSender.sendMessage(Objects.requireNonNull(HelloMinecraft.config.getString("lang.noenoughmoney", "You do not have enough money.")));
             return true;
         }
@@ -73,7 +73,7 @@ public class charge implements CommandExecutor {
                     preparedstatement.setDouble(1, money);
                     preparedstatement.setString(2, args[0]);
                     preparedstatement.execute();
-                    preparedstatement = connection.prepareStatement("INSERT INTO deals (time,tid,station,action, money) VALUES (?, ?, 0, 3, ?);");
+                    preparedstatement = connection.prepareStatement("INSERT INTO deals (time,tid,station,action, money) VALUES (?, ?, 0, charge, ?);");
                     preparedstatement.setLong(1, System.currentTimeMillis());
                     preparedstatement.setString(2, args[0]);
                     preparedstatement.setDouble(3, amount);
