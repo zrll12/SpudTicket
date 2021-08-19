@@ -67,7 +67,7 @@ public class MySql {
                             "  `serial` INTEGER AUTO_INCREMENT,\n" +
                             "  `time` BIGINT NOT NULL,\n" +
                             "  `tid` TEXT NOT NULL,\n" +
-                            "  `action` BOOLEAN NOT NULL,\n" +//0:in, 1:out
+                            "  `action` TEXT NOT NULL,\n" +
                             "  `station` TEXT NOT NULL,\n" +
                             "  `money` double NULL,\n" +
                             "  PRIMARY KEY (`serial`)\n" +
