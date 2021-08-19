@@ -135,7 +135,7 @@ public class Gate implements Listener {
                             }
                             preparedstatement.close();
                             //deals= 0:in, 1:out, 3:charge
-                            preparedstatement = connection.prepareStatement("INSERT INTO deals (time,tid,station,action, money) VALUES (?, ?, ?, 0, 0);");
+                            preparedstatement = connection.prepareStatement("INSERT INTO deals (time,tid,station,action, money) VALUES (?, ?, ?, in, 0);");
                             preparedstatement.setLong(1, System.currentTimeMillis());
                             preparedstatement.setString(2, tid);
                             preparedstatement.setString(3, sign.getLine(1));
@@ -193,8 +193,7 @@ public class Gate implements Listener {
                             preparedstatement.setString(2, tid);
                             preparedstatement.execute();
 
-                            //deals= 0:in, 1:out, 3:charge
-                            preparedstatement = connection.prepareStatement("INSERT INTO deals (time,tid,station,action, money) VALUES (?, ?, ?, 1, 2);");
+                            preparedstatement = connection.prepareStatement("INSERT INTO deals (time,tid,station,action, money) VALUES (?, ?, ?, out, 2);");
                             preparedstatement.setLong(1, System.currentTimeMillis());
                             preparedstatement.setString(2, tid);
                             preparedstatement.setString(3, sign.getLine(1));
