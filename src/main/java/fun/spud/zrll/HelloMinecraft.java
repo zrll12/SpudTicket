@@ -67,7 +67,7 @@ public class HelloMinecraft extends JavaPlugin {
 
     public void saveDefaultConfig(){
         if(getConfig().getDouble("configversion", 0) <= 1.1){
-            logger.info("Configure file outdated, now updating it to the least version.");
+            getLogger().info("Configure file outdated, now updating it to the least version.");
             getConfig().set("configversion", 1.1);
             getConfig().set("MySql.jdbcname", getConfig().getString("MySql.jdbcname", "com.mysql.jdbc.Driver"));
             getConfig().set("MySql.ip", getConfig().getString("MySql.ip", "127.0.0.1"));
