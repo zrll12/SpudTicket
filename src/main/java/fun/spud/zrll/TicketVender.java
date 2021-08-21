@@ -30,7 +30,7 @@ public class TicketVender  implements Listener {
 
     @EventHandler
     public void getCard(PlayerInteractEvent e){
-        if(e.isBlockInHand() || Objects.requireNonNull(e.getClickedBlock()).getType() != Material.OAK_WALL_SIGN || e.getAction() != Action.LEFT_CLICK_BLOCK){
+        if(Objects.requireNonNull(e.getClickedBlock()).getType() != Material.OAK_WALL_SIGN || e.getAction() != Action.LEFT_CLICK_BLOCK){
             return;
         }
         Sign sign = (Sign) e.getClickedBlock().getState();
@@ -71,7 +71,9 @@ public class TicketVender  implements Listener {
                 e.getPlayer().sendMessage(String.format(Objects.requireNonNull(HelloMinecraft.config.getString("lang.newspud++", "You have get your new spud++, id: %s")), tid));
                 e.getPlayer().getInventory().addItem(ticket);
             }
-
+            if(!e.isBlockInHand()){
+                return;
+            }
             if(sign.getLine(1).equals("Charge your spud++!")){
                 if(e.getItem() == null){
                     e.getPlayer().sendMessage(String.format(Objects.requireNonNull(HelloMinecraft.config.getString("lang.chargeuke", "Unknown error has occurred when charging, please send the following message to the admins: %s")), "No such ticket"));
@@ -135,7 +137,7 @@ public class TicketVender  implements Listener {
                             double money = resultset.getDouble("money");
                             preparedstatement.close();
                             connection.close();
-                            e.getPlayer().sendMessage(String.format(HelloMinecraft.config.getString("lang.moneyleft", "Money left: %s"), money));
+                            e.getPlayer().sendMessage(String.format(Objects.requireNonNull(HelloMinecraft.config.getString("lang.moneyleft", "Money left: %s")), money));
                         } catch (ClassNotFoundException | SQLException e) {
                             e.printStackTrace();
                         }
@@ -158,7 +160,13 @@ public class TicketVender  implements Listener {
             return;
         }
         chargeList.remove(info, equal);
-        e.getPlayer().chat("/charge " + check.getTid() + " " + e.getMessage());
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                e.getPlayer().chat("/charge " + check.getTid() + " " + e.getMessage());
+            }
+        }.runTask(HelloMinecraft.instance);
+
     }
 
     String getTID(ItemStack itemstack){
