@@ -2,7 +2,7 @@
 
 ## If you need English version pleae go to:
 
-- [README.en.md](https://gitee.com/zrll/spud-ticket/blob/master/README.en.md)
+- [README.en.md](https://github.com/zrll12/SpudTicket/blob/master/README.en.md)
 
 ## 介绍
 一个适用于mc1.16及以上的spigot插件，用于售票，检票。
