@@ -1,5 +1,9 @@
 # SpudTicket
 
+## If you need English version pleae go to:
+
+- [README.en.md](https://gitee.com/zrll/spud-ticket/blob/master/README.en.md)
+
 ## 介绍
 一个适用于mc1.16及以上的spigot插件，用于售票，检票。
 
@@ -26,8 +30,8 @@
 2. 告示牌左键使用，若需要破坏告示牌，请运行/breaksign，完成请运行/donebreaksign
 3. 数据库表格使用：ticket存储公交卡信息，deals存储消费信息（进站，出站，充值）
 4. 关于构建的版本（从v1.1开始）：
-   (1)min：仅包含插件代码编译后的class文件
-   (2)complete：包含class文件和md5算法（建议使用min版本无法加载后再选用此版本）
+   (1)min：仅包含插件代码编译后的文件
+   (2)complete：包含插件和md5算法编译后的文件（建议使用min版本无法加载后再选用此版本）
 
 ## 功能
 
