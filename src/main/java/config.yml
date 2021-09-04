@@ -7,6 +7,7 @@ MySql:
   password: 000000
   dbname: spudticket
 ticket-price: 2
+close-delay:2000
 lang:
   notaplayer: "不是玩家，请输入完整的参数"
   dbinformationchange: "数据库信息已刷新"
@@ -27,3 +28,5 @@ lang:
   moneyleft: "余额：%s"
   inputamount: "请在聊天栏输入充值金额，您目前的余额为：%s"
   inputfailed: "您的输入不合法，请输入一个数字，充值失败，请重新点击告示牌"
+  clicktoinput: "点击将命令自动输入到聊天栏"
+  pleaseclick: "请点击后面的命令来输入。稍后请自行执行："

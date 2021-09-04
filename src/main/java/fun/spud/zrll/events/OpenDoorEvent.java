@@ -1,5 +1,6 @@
 package fun.spud.zrll.events;
 
+import fun.spud.zrll.HelloMinecraft;
 import org.bukkit.Location;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.server.ServerEvent;
@@ -8,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public class OpenDoorEvent extends ServerEvent {
     private static final HandlerList handlers = new HandlerList();
     private Location location;
-    private int delay = 2000;
+    private int delay = HelloMinecraft.config.getInt("close-delay", 2000);
 
     public void setDelay(int delay) {
         this.delay = delay;
@@ -32,7 +33,4 @@ public class OpenDoorEvent extends ServerEvent {
         return handlers;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
 }

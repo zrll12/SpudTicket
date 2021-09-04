@@ -14,6 +14,7 @@ import java.security.NoSuchAlgorithmException;
 public class ComputerId {
     /**
      * Get the name of your operating.
+     *
      * @return The number
      */
     public static String getOSName() {
@@ -22,6 +23,7 @@ public class ComputerId {
 
     /**
      * Get your mainboard serial number(used in Windows).
+     *
      * @return The number
      */
     public static String getMainBordId_windows() {
@@ -57,6 +59,7 @@ public class ComputerId {
 
     /**
      * get your mainboard serial number(used in Linux).
+     *
      * @return The number
      */
     static String getMainBordId_linux() {
@@ -66,7 +69,7 @@ public class ComputerId {
         Process p;
         try {
             p = Runtime.getRuntime().exec(
-                    new String[] { "sh", "-c", maniBord_cmd });
+                    new String[]{"sh", "-c", maniBord_cmd});
             BufferedReader br = new BufferedReader(new InputStreamReader(
                     p.getInputStream()));
             String line;
@@ -82,9 +85,10 @@ public class ComputerId {
 
     /**
      * get your mainboard serial number
+     *
      * @return The number
      */
-    static String getMainBordId(){
+    static String getMainBordId() {
         String os = getOSName();
         String mainBordId = "";
         if (os.startsWith("windows")) {
@@ -92,14 +96,15 @@ public class ComputerId {
         } else if (os.startsWith("linux")) {
             mainBordId = getMainBordId_linux();
         }
-        if(mainBordId == null || mainBordId.equals("")){
-            mainBordId="null";
+        if (mainBordId == null || mainBordId.equals("")) {
+            mainBordId = "null";
         }
         return mainBordId;
     }
 
     /**
      * Get your cpu serial number(used in Windows).
+     *
      * @return The number
      */
     static String getCPUID_Windows() {
@@ -136,15 +141,16 @@ public class ComputerId {
 
     /**
      * Get your cpu serial number(used in Linux).
+     *
      * @return The number
      */
-    static String getCPUID_linux(){
+    static String getCPUID_linux() {
         String result = "";
         String CPU_ID_CMD = "dmidecode";
         BufferedReader bufferedReader;
         Process p;
         try {
-            p = Runtime.getRuntime().exec(new String[]{ "sh", "-c", CPU_ID_CMD });
+            p = Runtime.getRuntime().exec(new String[]{"sh", "-c", CPU_ID_CMD});
             bufferedReader = new BufferedReader(new InputStreamReader(
                     p.getInputStream()));
             String line;
@@ -165,9 +171,10 @@ public class ComputerId {
 
     /**
      * Get your cpu serial number
+     *
      * @return The number
      */
-    static String getCPUId(){
+    static String getCPUId() {
         String os = getOSName();
         String cpuId = "";
         if (os.startsWith("windows")) {
@@ -175,14 +182,15 @@ public class ComputerId {
         } else if (os.startsWith("linux")) {
             cpuId = getCPUID_linux();
         }
-        if(cpuId == null || cpuId.equals("")){
-            cpuId="null";
+        if (cpuId == null || cpuId.equals("")) {
+            cpuId = "null";
         }
         return cpuId;
     }
 
     /**
      * Get your unique computer id.
+     *
      * @return Your computer id.
      * @throws NoSuchAlgorithmException Your OS dose not support md5.
      */

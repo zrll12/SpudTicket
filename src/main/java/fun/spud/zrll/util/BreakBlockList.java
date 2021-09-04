@@ -3,31 +3,31 @@ package fun.spud.zrll.util;
 import fun.spud.zrll.varclass.Equal;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 public class BreakBlockList {
 
     public Object[] canBreakSigns;
     public int tailOfCBS = 0;
 
-    public BreakBlockList(){
+    public BreakBlockList() {
         canBreakSigns = new Object[10];
     }
 
     /**
      * Let the player break the protected sign.
+     *
      * @param name Player's uuid
      */
-    public void insert(Object name, Equal equal){
+    public void insert(Object name, Equal equal) {
         boolean flag = true;
         this.expandCapacity(tailOfCBS + 1);
         for (int i = 0; i < tailOfCBS; i++) {
-            if(equal.cmp(canBreakSigns[i], name)){
+            if (equal.cmp(canBreakSigns[i], name)) {
                 flag = false;
                 break;
             }
         }
-        if(flag){
+        if (flag) {
             canBreakSigns[tailOfCBS] = name;
             tailOfCBS++;
         }
@@ -35,13 +35,14 @@ public class BreakBlockList {
 
     /**
      * Do not let the player break the protected sign.
+     *
      * @param name Player's uuid
      * @return True if success, false if player is not exist
      */
-    public boolean remove(Object name, Equal equal){
+    public boolean remove(Object name, Equal equal) {
         boolean flag = false;
         for (int i = 0; i < tailOfCBS; i++) {
-            if(equal.cmp(canBreakSigns[i], name)){
+            if (equal.cmp(canBreakSigns[i], name)) {
                 for (int j = i; j < tailOfCBS - 1; j++) {
                     canBreakSigns[i] = canBreakSigns[i + 1];
                 }
@@ -54,10 +55,11 @@ public class BreakBlockList {
 
     /**
      * Check whether the player can break the sign.
+     *
      * @param name Player's uuid
      * @return True if the player can break the sign, false if the player can not break the sign
      */
-    public Object check(Object name, Equal equal){
+    public Object check(Object name, Equal equal) {
         Object find = new Object();
         boolean flag = true;
         for (int i = 0; i < tailOfCBS; i++) {
@@ -67,14 +69,15 @@ public class BreakBlockList {
                 break;
             }
         }
-        if(flag){
-            return  null;
+        if (flag) {
+            return null;
         }
         return find;
     }
 
     /**
      * Expand the size if it is not enough.
+     *
      * @param size the size
      */
     public void expandCapacity(int size) {

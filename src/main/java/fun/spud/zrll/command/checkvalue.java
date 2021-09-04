@@ -17,7 +17,7 @@ import java.util.Objects;
 public class checkvalue implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        if(args.length < 1){
+        if (args.length < 1) {
             return false;
         }
         new BukkitRunnable() {
@@ -30,7 +30,7 @@ public class checkvalue implements CommandExecutor {
                     PreparedStatement preparedstatement = connection.prepareStatement("SELECT * FROM ticket WHERE tid = ?");
                     preparedstatement.setString(1, tid);
                     ResultSet resultset = preparedstatement.executeQuery();
-                    if(!resultset.next()){
+                    if (!resultset.next()) {
                         commandSender.sendMessage(String.format(Objects.requireNonNull(HelloMinecraft.config.getString("lang.chargeuke", "Unknown error has occurred, please send the following message to the admins: %s.")), "No such ticket."));
                     }
                     double money = resultset.getDouble("money");

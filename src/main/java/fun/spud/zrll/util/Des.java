@@ -26,6 +26,7 @@ public class Des {
 
     /**
      * Encrypt the string.
+     *
      * @param strIn The string you want to encrypt
      * @return The encrypted string.
      * @throws Exception null
@@ -40,11 +41,12 @@ public class Des {
 
     /**
      * Decrypt the string.
+     *
      * @param strIn The string you want to decrypt
      * @return The decrypted string
      * @throws Exception null
      */
-    public String decrypt(String strIn)throws Exception{
+    public String decrypt(String strIn) throws Exception {
         return new String(decrypt(hexStr2ByteArr(strIn)));
     }
 

@@ -5,6 +5,13 @@ import fun.spud.zrll.util.BreakBlockList;
 import fun.spud.zrll.util.MySql;
 import fun.spud.zrll.util.random;
 import fun.spud.zrll.varclass.Equal;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
@@ -20,30 +27,29 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
-public class TicketVender  implements Listener {
+public class TicketVender implements Listener {
     BreakBlockList chargeList = new BreakBlockList();
 
     @EventHandler
-    public void getCard(PlayerInteractEvent e){
-        if(Objects.requireNonNull(e.getClickedBlock()).getType() != Material.OAK_WALL_SIGN || e.getAction() != Action.LEFT_CLICK_BLOCK){
+    public void getCard(PlayerInteractEvent e) {
+        if (Objects.requireNonNull(e.getClickedBlock()).getType() != Material.OAK_WALL_SIGN || e.getAction() != Action.LEFT_CLICK_BLOCK) {
             return;
         }
         Sign sign = (Sign) e.getClickedBlock().getState();
-        if(sign.getLine(0).equals("[ticket]")) {
+        if (sign.getLine(0).equals("[ticket]")) {
             Equal equal = new Equal();
+            //cancel the event if you are in the list
             if (breaksign.breakBlockList.check(e.getPlayer().getUniqueId(), equal) != null) {
                 e.getPlayer().sendMessage(Objects.requireNonNull(HelloMinecraft.config.getString("lang.brokeblock", "You have broke a block.")));
                 return;
-            }
-            else{
+            } else {
                 e.setCancelled(true);
             }
-            if (sign.getLine(1).equals("Get your spud++!")) {
+            //get new spud++
+            if (sign.getLine(1).equals("Get your supd++!")) {
+                System.out.println(111);
                 HelloMinecraft.instance.getLogger().info("Player " + e.getPlayer().getName() + " have got a spud++.");
                 String tid = random.getRandomTID("A-");
                 ItemStack ticket = new ItemStack(Material.PAPER);
@@ -54,16 +60,14 @@ public class TicketVender  implements Listener {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        try
-                        {
+                        try {
                             Connection connection = MySql.getSQLConnection();
                             PreparedStatement preparedstatement = connection.prepareStatement("INSERT INTO ticket (tid,money) VALUES (?, 0);");
                             preparedstatement.setString(1, tid);
                             preparedstatement.execute();
                             preparedstatement.close();
                             connection.close();
-                        } catch(SQLException | ClassNotFoundException throwables)
-                        {
+                        } catch (SQLException | ClassNotFoundException throwables) {
                             throwables.printStackTrace();
                         }
                     }
@@ -71,20 +75,23 @@ public class TicketVender  implements Listener {
                 e.getPlayer().sendMessage(String.format(Objects.requireNonNull(HelloMinecraft.config.getString("lang.newspud++", "You have get your new spud++, id: %s")), tid));
                 e.getPlayer().getInventory().addItem(ticket);
             }
-            if(!e.isBlockInHand()){
+            //if you are not holding a ticket then you can not charge or check the value of it.
+            if (e.isBlockInHand()) {
                 return;
             }
-            if(sign.getLine(1).equals("Charge your spud++!")){
-                if(e.getItem() == null){
+            //charge
+            if (sign.getLine(1).equals("Charge your spud++!")) {
+                if (e.getItem() == null) {
                     e.getPlayer().sendMessage(String.format(Objects.requireNonNull(HelloMinecraft.config.getString("lang.chargeuke", "Unknown error has occurred when charging, please send the following message to the admins: %s")), "No such ticket"));
                     return;
                 }
                 String tid = getTID(e.getItem());
-                if(tid == null){
+                if (tid == null) {
                     e.getPlayer().sendMessage(String.format(Objects.requireNonNull(HelloMinecraft.config.getString("lang.chargeuke", "Unknown error has occurred when charging, please send the following message to the admins: %s")), "No such ticket"));
                     return;
                 }
-                new BukkitRunnable(){
+                //get its value and informs the player to input the amount.
+                new BukkitRunnable() {
                     @Override
                     public void run() {
                         try {
@@ -92,7 +99,7 @@ public class TicketVender  implements Listener {
                             PreparedStatement preparedstatement = connection.prepareStatement("SELECT * FROM ticket WHERE tid = ?");
                             preparedstatement.setString(1, tid);
                             ResultSet resultset = preparedstatement.executeQuery();
-                            if(!resultset.next()){
+                            if (!resultset.next()) {
                                 e.getPlayer().sendMessage(String.format(Objects.requireNonNull(HelloMinecraft.config.getString("lang.chargeuke", "Unknown error has occurred when charging, please send the following message to the admins: %s")), "No such ticket"));
                                 return;
                             }
@@ -103,6 +110,7 @@ public class TicketVender  implements Listener {
                             object.setUUID(e.getPlayer().getUniqueId());
                             object.setTid(tid);
                             equal1 cequal = new equal1();
+                            //put the player in the list, so he can input the amount.
                             chargeList.insert(object, cequal);
                         } catch (SQLException | ClassNotFoundException ex) {
                             ex.printStackTrace();
@@ -110,17 +118,17 @@ public class TicketVender  implements Listener {
                     }
                 }.runTaskAsynchronously(HelloMinecraft.instance);
             }
-
-            if(sign.getLine(1).equals("Check money left")){
+            //check the value left
+            if (sign.getLine(1).equals("Check money left")) {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        if(e.getItem() == null){
+                        if (e.getItem() == null) {
                             e.getPlayer().sendMessage(String.format(Objects.requireNonNull(HelloMinecraft.config.getString("lang.chargeuke", "Unknown error has occurred when charging, please send the following message to the admins: %s")), "No such ticket"));
                             return;
                         }
                         String tid = getTID(e.getItem());
-                        if(tid == null){
+                        if (tid == null) {
                             e.getPlayer().sendMessage(String.format(Objects.requireNonNull(HelloMinecraft.config.getString("lang.chargeuke", "Unknown error has occurred when charging, please send the following message to the admins: %s")), "No such ticket"));
                             return;
                         }
@@ -130,7 +138,7 @@ public class TicketVender  implements Listener {
                             PreparedStatement preparedstatement = connection.prepareStatement("SELECT * FROM ticket WHERE tid = ?");
                             preparedstatement.setString(1, tid);
                             ResultSet resultset = preparedstatement.executeQuery();
-                            if(!resultset.next()){
+                            if (!resultset.next()) {
                                 e.getPlayer().sendMessage(String.format(Objects.requireNonNull(HelloMinecraft.config.getString("lang.chargeuke", "Unknown error has occurred, please send the following message to the admins: %s.")), "No such ticket."));
                                 return;
                             }
@@ -148,44 +156,53 @@ public class TicketVender  implements Listener {
     }
 
     @EventHandler
-    public void getChat(PlayerChatEvent e){
+    public void getChat(PlayerChatEvent e) {
         equal1 equal = new equal1();
         ChargeInfo info = new ChargeInfo();
         info.setUUID(e.getPlayer().getUniqueId());
         ChargeInfo check = (ChargeInfo) chargeList.check(info, equal);
-        if(check != null){
+        if (check != null) {
             e.setCancelled(true);
-        }
-        else {
+        } else {
             return;
         }
         chargeList.remove(info, equal);
-        new BukkitRunnable(){
-            @Override
-            public void run() {
-                e.getPlayer().chat("/charge " + check.getTid() + " " + e.getMessage());
-            }
-        }.runTask(HelloMinecraft.instance);
 
+        String playercommand = "/charge " + check.getTid() + " " + StringUtils.deleteWhitespace(e.getMessage());
+        //basic setting
+        TextComponent command = new TextComponent(playercommand);
+        command.setColor(ChatColor.GREEN);
+        command.setBold(true);
+        //generate a new hover event
+        HoverEvent hover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(HelloMinecraft.config.getString("lang.clicktoinput", "Click here to input")));
+        command.setHoverEvent(hover);
+        //generate a new click event
+        ClickEvent click = new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, playercommand);
+        command.setClickEvent(click);
+        //texts before the command
+        //combine
+        BaseComponent component = new TextComponent(HelloMinecraft.config.getString("lang.pleaseclick", "Please click the command after this to input the command automatically and run it later: "));
+        component.addExtra(command);
+        e.getPlayer().sendMessage(component);
     }
 
-    String getTID(ItemStack itemstack){
+    String getTID(ItemStack itemstack) {
         ItemMeta itemmeta = itemstack.getItemMeta();
-        if(!Objects.requireNonNull(itemmeta).hasLore()){
+        if (!Objects.requireNonNull(itemmeta).hasLore()) {
             return null;
         }
         List<String> lore = itemmeta.getLore();
-        if(!itemmeta.getDisplayName().equals("[Spud++]")){
+        if (!itemmeta.getDisplayName().equals("[Spud++]")) {
             return null;
         }
         return Objects.requireNonNull(lore).get(0);
     }
 }
 
-class equal1 extends Equal{
+class equal1 extends Equal {
     @Override
     public boolean cmp(Object a, Object b) {
-        ChargeInfo ca = (ChargeInfo) a,cb = (ChargeInfo) b;
+        ChargeInfo ca = (ChargeInfo) a, cb = (ChargeInfo) b;
         return ca.getUUID() == cb.getUUID();
     }
 }

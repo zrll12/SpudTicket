@@ -22,7 +22,7 @@ import java.util.Objects;
 public class getcard implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, String[] strings) {
-        if(!(commandSender instanceof Player)){
+        if (!(commandSender instanceof Player)) {
             //控制台你获取个鬼啊
             return false;
         }
@@ -36,16 +36,14 @@ public class getcard implements CommandExecutor {
         new BukkitRunnable() {
             @Override
             public void run() {
-                try
-                {
+                try {
                     Connection connection = MySql.getSQLConnection();
                     PreparedStatement preparedstatement = connection.prepareStatement("INSERT INTO ticket (tid,money) VALUES (?, 0);");
                     preparedstatement.setString(1, tid);
                     preparedstatement.execute();
                     preparedstatement.close();
                     connection.close();
-                } catch(SQLException | ClassNotFoundException throwables)
-                {
+                } catch (SQLException | ClassNotFoundException throwables) {
                     throwables.printStackTrace();
                 }
             }

@@ -11,11 +11,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class breaksign  implements CommandExecutor {
+public class breaksign implements CommandExecutor {
     public static BreakBlockList breakBlockList = new BreakBlockList();
+
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, String[] strings) {
-        if(!(commandSender instanceof Player)){
+        if (!(commandSender instanceof Player)) {
             return false;
         }
         Equal equal = new Equal();

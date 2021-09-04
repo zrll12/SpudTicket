@@ -23,14 +23,14 @@ public class updatedb implements CommandExecutor {
             int maxticket = 0, maxdeals = 0;
             //ticket
             resultset = statement.executeQuery("SELECT * FROM ticket");
-            for(int i = 0; resultset.next(); i++) {
+            for (int i = 0; resultset.next(); i++) {
                 ticketdata.set(i + ".tid", resultset.getString("tid"));
                 ticketdata.set(i + ".money", resultset.getInt("money"));
                 maxticket = i;
             }
             //deals
             resultset = statement.executeQuery("SELECT * FROM deals");
-            for(int i = 0; resultset.next(); i++) {
+            for (int i = 0; resultset.next(); i++) {
                 dealsdata.set(i + ".time", resultset.getLong("time"));
                 dealsdata.set(i + ".tid", resultset.getString("tid"));
                 dealsdata.set(i + ".money", resultset.getInt("money"));
@@ -62,10 +62,9 @@ public class updatedb implements CommandExecutor {
                 preparedstatement.close();
             }
             connection.close();
-            if(commandSender instanceof Player){
+            if (commandSender instanceof Player) {
                 commandSender.sendMessage(Objects.requireNonNull(HelloMinecraft.config.getString("lang.dbupdated", "Database information changed.")));
-            }
-            else{
+            } else {
                 commandSender.sendMessage(Objects.requireNonNull(HelloMinecraft.config.getString("lang.dbupdated", "All tables are updated.")));
             }
         } catch (ClassNotFoundException | SQLException e) {

@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
@@ -22,7 +23,7 @@ public class HelloMinecraft extends JavaPlugin {
 
 
     @Override
-    public void onEnable(){
+    public void onEnable() {
         getLogger().info("Hello Minecraft!");
         saveDefaultConfig();
         instance = this;
@@ -42,32 +43,38 @@ public class HelloMinecraft extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new TicketVender(), this);
         Bukkit.getPluginManager().registerEvents(new GateOperation(), this);
 
-        Des des = null;
-        try {
-            des = new Des(ComputerId.getComputerID());
-        } catch (NoSuchAlgorithmException e) {
-            this.getLogger().info("Can not find algorithm: md5.");
-        }
-        try {
-            assert des != null;
-            String username = des.decrypt(config.getString("MySql.username"));
-            String password = des.decrypt(config.getString("MySql.password"));
-            MySql.UpdateInformation(username, password);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Des des = null;
+                try {
+                    des = new Des(ComputerId.getComputerID());
+                } catch (NoSuchAlgorithmException e) {
+                    instance.getLogger().info("Can not find algorithm: md5.");
+                }
+                try {
+                    assert des != null;
+                    String username = des.decrypt(config.getString("MySql.username"));
+                    String password = des.decrypt(config.getString("MySql.password"));
+                    MySql.UpdateInformation(username, password);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }.runTaskAsynchronously(this);
 
-        if(!setupEconomy()){
+        if (!setupEconomy()) {
             getLogger().info("Vault not detected, plugin disabled.");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
+
         getLogger().info("Plugin loaded.");
     }
 
-    public void saveDefaultConfig(){
-        if(getConfig().getDouble("configversion", 0) <= 1.1){
-            getLogger().info("Configure file outdated, now updating it to the least version.");
+    public void saveDefaultConfig() {
+        if (getConfig().getDouble("configversion", 0) <= 1.1) {
+            getLogger().info("Configure file outdated (version:" + getConfig().getDouble("configversion", 0) + "), now updating it to the least version.");
             getConfig().set("configversion", 1.1);
             getConfig().set("MySql.jdbcname", getConfig().getString("MySql.jdbcname", "com.mysql.jdbc.Driver"));
             getConfig().set("MySql.ip", getConfig().getString("MySql.ip", "127.0.0.1"));
@@ -76,6 +83,7 @@ public class HelloMinecraft extends JavaPlugin {
             getConfig().set("MySql.password", getConfig().getString("MySql.password", "0000"));
             getConfig().set("MySql.dbname", getConfig().getString("MySql.dbname", "spudticket"));
             getConfig().set("ticket-price", 2);
+            getConfig().set("close-delay", getConfig().getInt("close-delay", 2000));
             getConfig().set("lang.notaplayer", "不是玩家，请输入完整的参数");
             getConfig().set("lang.dbinformationchange", "数据库信息已刷新");
             getConfig().set("tableinit", "已初始化所有数据表格");
@@ -95,6 +103,8 @@ public class HelloMinecraft extends JavaPlugin {
             getConfig().set("moneyleft", "余额：%s");
             getConfig().set("inputamount", "请在聊天栏输入充值金额，您目前的余额为：%s");
             getConfig().set("inputfailed", "您的输入不合法，请输入一个数字，充值失败，请重新点击告示牌");
+            getConfig().set("clicktoinput", "点击将命令自动输入到聊天栏");
+            getConfig().set("pleaseclick", "请点击后面的命令来输入。稍后请自行执行：");
             saveConfig();
         }
     }
@@ -112,7 +122,7 @@ public class HelloMinecraft extends JavaPlugin {
     }
 
     @Override
-    public void onDisable(){
+    public void onDisable() {
         getConfig().set("MySql.ip", config.getString("MySql.ip", "127.0.0.1"));
         getConfig().set("MySql.port", config.getInt("MySql.port", 3306));
         getConfig().set("MySql.username", config.getString("MySql.username", "user"));

@@ -20,35 +20,34 @@ import java.util.Objects;
 public class charge implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, String[] args) {
-        if(args.length == 2 && !(command instanceof Player)){
+        if (args.length == 2 && !(command instanceof Player)) {
             HelloMinecraft.config.getString("lang.notaplayer", "Not a player, please provide full args.");
         }
         if (args.length == 3 && (!commandSender.hasPermission("spud.ticketmanage"))) {
             commandSender.sendMessage("Only admins can do this!");
             return true;
         }
-        if (args.length < 2){
+        if (args.length < 2) {
             return false;
         }
         String player = commandSender.getName();
-        if(args.length == 3){
+        if (args.length == 3) {
             player = args[2];
         }
         double amount;
-        try{
+        try {
             amount = Double.parseDouble(args[1]);
-        } catch (IllegalArgumentException NumberFormatException){
+        } catch (IllegalArgumentException NumberFormatException) {
             commandSender.sendMessage(Objects.requireNonNull(HelloMinecraft.config.getString("lang.inputfailed", "Error input, this is not a number")));
             return true;
         }
-        if(HelloMinecraft.econ.getBalance(Bukkit.getPlayer(player)) <= amount){
-            System.out.println(amount);
-            System.out.println("\"" + args[1] + "\"");
+
+        if (HelloMinecraft.econ.getBalance(Bukkit.getPlayer(player)) <= amount) {
             commandSender.sendMessage(Objects.requireNonNull(HelloMinecraft.config.getString("lang.noenoughmoney", "You do not have enough money.")));
             return true;
         }
         String finalPlayer = player;
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
             public void run() {
                 Connection connection;
@@ -58,10 +57,11 @@ public class charge implements CommandExecutor {
                     preparedstatement.setString(1, args[0]);
                     preparedstatement.execute();
                     ResultSet resultset = preparedstatement.getResultSet();
-                    if(!resultset.next()){
+                    if (!resultset.next()) {
                         commandSender.sendMessage(String.format(Objects.requireNonNull(HelloMinecraft.config.getString("lang.chargeuke", "Unknown error has occurred, please send the following message to the admins: %s")), "No such ticket."));
-                    } EconomyResponse response = HelloMinecraft.econ.withdrawPlayer(Bukkit.getPlayer(finalPlayer), Double.parseDouble(args[1]));
-                    if(!(response.transactionSuccess()) || response.amount != Double.parseDouble(args[1])){
+                    }
+                    EconomyResponse response = HelloMinecraft.econ.withdrawPlayer(Bukkit.getPlayer(finalPlayer), Double.parseDouble(args[1]));
+                    if (!(response.transactionSuccess()) || response.amount != Double.parseDouble(args[1])) {
                         commandSender.sendMessage(String.format(Objects.requireNonNull(HelloMinecraft.config.getString("lang.chargeuke", "Unknown error has occurred when charging, please send the following message to the admins: %s.")), response.errorMessage));
                         return;
                     }
@@ -74,7 +74,7 @@ public class charge implements CommandExecutor {
                     preparedstatement.setDouble(1, money);
                     preparedstatement.setString(2, args[0]);
                     preparedstatement.execute();
-                    preparedstatement = connection.prepareStatement("INSERT INTO deals (time,tid,station,action, money) VALUES (?, ?, 0, `charge`, ?);");
+                    preparedstatement = connection.prepareStatement("INSERT INTO deals (time,tid,station,action, money) VALUES (?, ?, 0, 'charge', ?);");
                     preparedstatement.setLong(1, System.currentTimeMillis());
                     preparedstatement.setString(2, args[0]);
                     preparedstatement.setDouble(3, amount);
@@ -82,8 +82,7 @@ public class charge implements CommandExecutor {
                     preparedstatement.close();
                     connection.close();
                     String message = HelloMinecraft.config.getString("lang.chargescucceed", "You have successfully charged %s into %s. Now yu have %s");
-                    if(commandSender instanceof Player){
-                        assert message != null;
+                    if (commandSender instanceof Player) {
                         commandSender.sendMessage(String.format(message, args[1], args[0], money));
                     }
                     HelloMinecraft.instance.getLogger().info(finalPlayer + " has charged " + args[1] + " in to " + args[0] + ". Now you have " + money + ".");

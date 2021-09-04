@@ -14,7 +14,7 @@ import java.util.TimerTask;
 
 public class GateOperation implements Listener {
     @EventHandler
-    public void openGate(OpenDoorEvent e){
+    public void openGate(OpenDoorEvent e) {
         Gate blockgate;
         blockgate = (Gate) e.getLocation().getBlock().getBlockData();
         blockgate.setOpen(true);
@@ -28,7 +28,7 @@ public class GateOperation implements Listener {
     }
 
     @EventHandler
-    public void closeGate(CloseDoorEvent e){
+    public void closeGate(CloseDoorEvent e) {
         Location location = e.getLocation();
         Gate gate = (Gate) location.getBlock().getBlockData();
         gate.setOpen(false);
@@ -44,7 +44,7 @@ class CloseGate extends TimerTask {
         this.location = location;
     }
 
-    public CloseGate(Timer timer){
+    public CloseGate(Timer timer) {
         this.timer = timer;
     }
 

@@ -14,10 +14,9 @@ public class inittable implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, String[] strings) {
         MySql.InitTable();
-        if(commandSender instanceof Player){
+        if (commandSender instanceof Player) {
             commandSender.sendMessage(Objects.requireNonNull(HelloMinecraft.config.getString("lang.tableinit", "All table initialized.")));
-        }
-        else{
+        } else {
             HelloMinecraft.instance.getLogger().info(Objects.requireNonNull(HelloMinecraft.config.getString("lang.tableinit", "All table initialized.")));
         }
         return true;

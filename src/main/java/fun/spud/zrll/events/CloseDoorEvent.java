@@ -22,8 +22,4 @@ public class CloseDoorEvent extends ServerEvent {
     public HandlerList getHandlers() {
         return handlers;
     }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
 }

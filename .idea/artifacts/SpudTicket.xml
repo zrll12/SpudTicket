@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="SpudTicket">
+    <output-path>$PROJECT_DIR$/bin</output-path>
+    <root id="archive" name="SpudTicket.jar">
+      <element id="module-output" name="SpudTicket" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/main/java/config.yml" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/main/java/plugin.yml" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/commons-codec/commons-codec/1.8/commons-codec-1.8.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

@@ -21,8 +21,8 @@ import java.util.Objects;
 
 public class linkdb implements CommandExecutor {
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, String[] args){
-        if(Arrays.stream(args).count() < 5){
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, String[] args) {
+        if (Arrays.stream(args).count() < 5) {
             return false;
         }
         Des des = null;
@@ -41,7 +41,7 @@ public class linkdb implements CommandExecutor {
             e.printStackTrace();
         }
         MySql.UpdateInformation(args[3], args[4]);
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
             public void run() {
                 Connection connection;
@@ -61,10 +61,9 @@ public class linkdb implements CommandExecutor {
                 }
             }
         }.runTaskAsynchronously(HelloMinecraft.instance);
-        if(commandSender instanceof Player){
+        if (commandSender instanceof Player) {
             commandSender.sendMessage(Objects.requireNonNull(HelloMinecraft.config.getString("lang.dbinformationchang", "Database information changed.")));
-        }
-        else{
+        } else {
             HelloMinecraft.instance.getLogger().info(Objects.requireNonNull(HelloMinecraft.config.getString("lang.dbinformationchang", "Database information changed.")));
         }
         return true;

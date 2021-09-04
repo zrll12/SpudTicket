@@ -6,10 +6,11 @@ public class random {
 
     /**
      * Get a random ticket id.
+     *
      * @param TIDprefix The prefix of the tid
      * @return The tid
      */
-    public static String getRandomTID(String TIDprefix){
+    public static String getRandomTID(String TIDprefix) {
         UUID motheruuid = UUID.randomUUID();
         StringBuilder tid = new StringBuilder(TIDprefix);
         String[] stringuuid = motheruuid.toString().split("-");

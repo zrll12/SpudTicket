@@ -25,54 +25,55 @@ import java.util.List;
 import java.util.Objects;
 
 public class Gate implements Listener {
-    Location getDoorPosition(BlockFace facing, Location sign, int direction){
-        if (direction == 3){
+    //获取门方块位置
+    Location getDoorPosition(BlockFace facing, Location sign, int direction) {
+        if (direction == 3) {
             return null;
         }
         Location gate = sign;
-        switch (facing){
+        switch (facing) {
             case EAST:
-                gate = gate.add(-1,0,0);
-                if (direction == 1){
+                gate = gate.add(-1, 0, 0);
+                if (direction == 1) {
                     //->
-                    gate = gate.add(0,0,-1);
+                    gate = gate.add(0, 0, -1);
                 }
-                if (direction == 2){
+                if (direction == 2) {
                     //<-
-                    gate = gate.add(0,0,1);
+                    gate = gate.add(0, 0, 1);
                 }
                 break;
             case WEST:
-                gate = gate.add(1,0,0);
-                if (direction == 1){
+                gate = gate.add(1, 0, 0);
+                if (direction == 1) {
                     //->
-                    gate = gate.add(0,0,1);
+                    gate = gate.add(0, 0, 1);
                 }
-                if (direction == 2){
+                if (direction == 2) {
                     //<-
-                    gate = gate.add(0,0,-1);
+                    gate = gate.add(0, 0, -1);
                 }
                 break;
             case NORTH:
-                gate = gate.add(0,0,1);
-                if (direction == 1){
+                gate = gate.add(0, 0, 1);
+                if (direction == 1) {
                     //->
-                    gate = gate.add(-1,0,0);
+                    gate = gate.add(-1, 0, 0);
                 }
-                if (direction == 2){
+                if (direction == 2) {
                     //<-
-                    gate = gate.add(1,0,0);
+                    gate = gate.add(1, 0, 0);
                 }
                 break;
             case SOUTH:
-                gate = gate.add(0,0,-1);
-                if (direction == 1){
+                gate = gate.add(0, 0, -1);
+                if (direction == 1) {
                     //->
-                    gate = gate.add(1,0,0);
+                    gate = gate.add(1, 0, 0);
                 }
-                if (direction == 2){
+                if (direction == 2) {
                     //<-
-                    gate = gate.add(-1,0,0);
+                    gate = gate.add(-1, 0, 0);
                 }
                 break;
             default:
@@ -82,39 +83,37 @@ public class Gate implements Listener {
     }
 
     @EventHandler
-    public void passGate(PlayerInteractEvent e){
-        if(e.isBlockInHand() || Objects.requireNonNull(e.getClickedBlock()).getType() != Material.OAK_WALL_SIGN || !(e.hasItem()) || Objects.requireNonNull(e.getItem()).getType() != Material.PAPER || e.getAction() != Action.LEFT_CLICK_BLOCK){
+    public void passGate(PlayerInteractEvent e) {
+        if (e.isBlockInHand() || Objects.requireNonNull(e.getClickedBlock()).getType() != Material.OAK_WALL_SIGN || !(e.hasItem()) || Objects.requireNonNull(e.getItem()).getType() != Material.PAPER || e.getAction() != Action.LEFT_CLICK_BLOCK) {
             return;
         }
         Sign sign = (Sign) e.getClickedBlock().getState();
-        if(sign.getLine(0).equals("[gate]")){
+        if (sign.getLine(0).equals("[gate]")) {
             Equal equal = new Equal();
+            //检查是否可以破坏方块
             if (breaksign.breakBlockList.check(e.getPlayer().getUniqueId(), equal) != null) {
                 e.getPlayer().sendMessage(Objects.requireNonNull(HelloMinecraft.config.getString("lang.brokeblock", "You have broke a block.")));
                 return;
-            }
-            else {
+            } else {
                 e.setCancelled(true);
             }
             Location gate;
             String tid = getTID(e.getItem());
             int face; // 1: ->; 2:<-; 3: error(closed);
-            if(sign.getLine(2).equals("<-")){
+            if (sign.getLine(2).equals("<-")) {
                 face = 2;
-            }
-            else if(sign.getLine(2).equals("->")){
+            } else if (sign.getLine(2).equals("->")) {
                 face = 1;
-            }
-            else{
+            } else {
                 face = 3;
             }
 
             gate = getDoorPosition(e.getBlockFace(), sign.getLocation(), face);
 
 
-            if(sign.getLine(3).equals("in")){
+            if (sign.getLine(3).equals("in")) {
                 //Get in the station
-                new BukkitRunnable(){
+                new BukkitRunnable() {
                     @Override
                     public void run() {
                         Connection connection;
@@ -122,20 +121,21 @@ public class Gate implements Listener {
                         PreparedStatement preparedstatement;
                         try {
                             connection = MySql.getSQLConnection();
+                            //获取余额
                             preparedstatement = connection.prepareStatement("SELECT * FROM ticket WHERE tid = ?");
                             preparedstatement.setString(1, tid);
                             resultset = preparedstatement.executeQuery();
-                            if(!resultset.next()){
+                            if (!resultset.next()) {
                                 e.getPlayer().sendMessage(String.format(Objects.requireNonNull(HelloMinecraft.config.getString("lang.chargeuke", "Unknown error has occurred when charging, please send the following message to the admins: %s.")), "No such ticket."));
                             }
                             double money = resultset.getDouble("money");
-                            if(money < 10){
+                            if (money < 10) {
                                 e.getPlayer().sendMessage(Objects.requireNonNull(HelloMinecraft.config.getString("lang.noenoughmoney", "You do not have enough money in your card.")));
                                 return;
                             }
                             preparedstatement.close();
-                            //deals= 0:in, 1:out, 3:charge
-                            preparedstatement = connection.prepareStatement("INSERT INTO deals (time,tid,station,action, money) VALUES (?, ?, ?, `in`, 0);");
+                            //将操作插入数据库
+                            preparedstatement = connection.prepareStatement("INSERT INTO deals (time,tid,station,action, money) VALUES (?, ?, ?, 'in', 0);");
                             preparedstatement.setLong(1, System.currentTimeMillis());
                             preparedstatement.setString(2, tid);
                             preparedstatement.setString(3, sign.getLine(1));
@@ -143,11 +143,12 @@ public class Gate implements Listener {
                             preparedstatement.close();
                             connection.close();
 
-                            new BukkitRunnable(){
+                            //开门
+                            new BukkitRunnable() {
                                 @Override
                                 public void run() {
                                     OpenDoorEvent event = new OpenDoorEvent();
-                                    event.setDelay(2000);
+                                    event.setDelay(HelloMinecraft.config.getInt("close-delay", 2000));
                                     event.setLocation(gate);
                                     Bukkit.getPluginManager().callEvent(event);
                                 }
@@ -160,10 +161,9 @@ public class Gate implements Listener {
                         }
                     }
                 }.runTaskAsynchronously(HelloMinecraft.instance);
-            }
-            else if(sign.getLine(3).equals("out")){
+            } else if (sign.getLine(3).equals("out")) {
                 //Get out the station
-                new BukkitRunnable(){
+                new BukkitRunnable() {
                     @Override
                     public void run() {
                         Connection connection;
@@ -171,10 +171,11 @@ public class Gate implements Listener {
                         PreparedStatement preparedstatement;
                         try {
                             connection = MySql.getSQLConnection();
+                            //获取余额
                             preparedstatement = connection.prepareStatement("SELECT * FROM ticket WHERE tid = ?");
                             preparedstatement.setString(1, tid);
                             resultset = preparedstatement.executeQuery();
-                            if(!resultset.next()){
+                            if (!resultset.next()) {
                                 e.getPlayer().sendMessage(String.format(Objects.requireNonNull(HelloMinecraft.config.getString("lang.chargeuke", "Unknown error has occurred when charging, please send the following message to the admins: %s.")), "No such ticket."));
                             }
                             double money = resultset.getDouble("money");
@@ -182,10 +183,12 @@ public class Gate implements Listener {
 
                             money -= HelloMinecraft.config.getDouble("ticket-price", 2);
 
-                            if (money < 0){
+                            //不允许欠费
+                            if (money < 0) {
                                 e.getPlayer().sendMessage(Objects.requireNonNull(HelloMinecraft.config.getString("lang.noenoughmoney", "You do not have enough money")));
                             }
 
+                            //更新余额
                             preparedstatement = connection.prepareStatement("UPDATE ticket\n" +
                                     "SET money=?\n" +
                                     "WHERE tid=?");
@@ -193,7 +196,8 @@ public class Gate implements Listener {
                             preparedstatement.setString(2, tid);
                             preparedstatement.execute();
 
-                            preparedstatement = connection.prepareStatement("INSERT INTO deals (time,tid,station,action, money) VALUES (?, ?, ?, `out`, 2);");
+                            //将操作插入数据库
+                            preparedstatement = connection.prepareStatement("INSERT INTO deals (time,tid,station,action, money) VALUES (?, ?, ?, 'out', 2);");
                             preparedstatement.setLong(1, System.currentTimeMillis());
                             preparedstatement.setString(2, tid);
                             preparedstatement.setString(3, sign.getLine(1));
@@ -201,11 +205,12 @@ public class Gate implements Listener {
                             preparedstatement.close();
                             connection.close();
 
+                            //开门
                             new BukkitRunnable() {
                                 @Override
                                 public void run() {
                                     OpenDoorEvent event = new OpenDoorEvent();
-                                    event.setDelay(2000);
+                                    event.setDelay(HelloMinecraft.config.getInt("close-delay", 2000));
                                     event.setLocation(gate);
                                     Bukkit.getPluginManager().callEvent(event);
                                 }
@@ -218,21 +223,20 @@ public class Gate implements Listener {
                         }
                     }
                 }.runTaskAsynchronously(HelloMinecraft.instance);
-            }
-            else{
+            } else {
                 //The gate is closed
                 e.getPlayer().sendMessage(Objects.requireNonNull(HelloMinecraft.config.getString("lang.gateclosed", "This gate is closed.")));
             }
         }
     }
 
-    String getTID(ItemStack itemstack){
+    String getTID(ItemStack itemstack) {
         ItemMeta itemmeta = itemstack.getItemMeta();
-        if(!Objects.requireNonNull(itemmeta).hasLore()){
+        if (!Objects.requireNonNull(itemmeta).hasLore()) {
             return null;
         }
         List<String> lore = itemmeta.getLore();
-        if(!itemmeta.getDisplayName().equals("[Spud++]")){
+        if (!itemmeta.getDisplayName().equals("[Spud++]")) {
             return null;
         }
         return Objects.requireNonNull(lore).get(0);

@@ -11,10 +11,11 @@ public class MySql {
 
     /**
      * Update the information of the MySql connection.(Will automatically save to file and initialize the tables)
+     *
      * @param username The username of MySql connection
      * @param password The password of MySql connection
      */
-    public static void UpdateInformation(String username, String password){
+    public static void UpdateInformation(String username, String password) {
         Ip = HelloMinecraft.config.getString("MySql.ip");
         Port = HelloMinecraft.config.getInt("MySql.port");
         Username = username;
@@ -31,9 +32,10 @@ public class MySql {
 
     /**
      * Get the connection to the MySql(as username and password are private).
+     *
      * @return The connection
      * @throws ClassNotFoundException Could not find the driver class
-     * @throws SQLException MySql returns with en error
+     * @throws SQLException           MySql returns with en error
      */
     public static Connection getSQLConnection() throws ClassNotFoundException, SQLException {
         final String JDBC_DRIVER = HelloMinecraft.config.getString("MySql.jdbcname", "com.mysql.jdbc.Driver");
@@ -48,8 +50,8 @@ public class MySql {
     /**
      * Initialize all the tables which used in this plugin.
      */
-    public static void InitTable(){
-        new BukkitRunnable(){
+    public static void InitTable() {
+        new BukkitRunnable() {
             @Override
             public void run() {
                 Statement statement;
