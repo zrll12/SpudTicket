@@ -2,7 +2,7 @@
 
 ## 中文请转到
 
-- [README.md](https://gitee.com/zrll/spud-ticket/blob/master/README.md)
+- [README.md](https://github.com/zrll12/SpudTicket/blob/master/README.md)
 
 ## Description
 A Minecraft plugin which is used for tickets.
